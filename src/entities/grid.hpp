@@ -40,14 +40,14 @@ class Grid {
 
         Grid (size_t iX, size_t iY);
 
-        void randomizeGrid ();
-        void printGrid ();
-
-        void checkAll ();
-        void updateAll ();
+        void randomize ();
+        void print ();
+        void update ();
 
     private:
-        void initGrid ();
+        void init ();
+        void checkCells ();
+        void updateCells ();
 };
 
 

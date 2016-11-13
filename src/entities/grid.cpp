@@ -31,10 +31,10 @@
 
 
 Grid::Grid (size_t iX, size_t iY) : x(iX), y(iY), cells() {
-    initGrid();
+    init();
 }
 
-void Grid::initGrid () {
+void Grid::init () {
     std::vector<std::vector<Cell>> iCells;
     for (size_t i = 0; i < this->x; i++) {
         std::vector<Cell> row;
@@ -47,7 +47,7 @@ void Grid::initGrid () {
     this->cells = iCells;
 }
 
-void Grid::randomizeGrid () {
+void Grid::randomize () {
     srand((unsigned int)time(NULL));
     std::vector<std::vector<Cell>> iCells;
     for (size_t i = 0; i < this->x; i++) {
@@ -61,23 +61,7 @@ void Grid::randomizeGrid () {
     this->cells = iCells;
 }
 
-void Grid::checkAll () {
-    for (size_t i = 0; i < this->x; i++) {
-        for (size_t j = 0; j < this->y; j++) {
-            this->cells.at(i).at(j).checkAlive();
-        }
-    }
-}
-
-void Grid::updateAll () {
-    for (size_t i = 0; i < this->x; i++) {
-        for (size_t j = 0; j < this->y; j++) {
-            this->cells.at(i).at(j).update();
-        }
-    }
-}
-
-void Grid::printGrid () {
+void Grid::print () {
     for (size_t i = 0; i < this->x; i++) {
         for (size_t j = 0; j < this->y; j++) {
             printf("%c ", this->cells.at(i).at(j).curChar);
@@ -85,6 +69,27 @@ void Grid::printGrid () {
         printf("\n");
     }
     printf("\n");
+}
+
+void Grid::update () {
+    Grid::checkCells();
+    Grid::updateCells();
+}
+
+void Grid::checkCells () {
+    for (size_t i = 0; i < this->x; i++) {
+        for (size_t j = 0; j < this->y; j++) {
+            this->cells.at(i).at(j).checkAlive();
+        }
+    }
+}
+
+void Grid::updateCells () {
+    for (size_t i = 0; i < this->x; i++) {
+        for (size_t j = 0; j < this->y; j++) {
+            this->cells.at(i).at(j).update();
+        }
+    }
 }
 
 

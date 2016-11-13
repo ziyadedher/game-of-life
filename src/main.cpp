@@ -34,11 +34,10 @@ int main () {
 
     Grid* grid = new Grid(width, height);
 
-    grid->randomizeGrid();
-    grid->printGrid();
-    grid->checkAll();
-    grid->updateAll();
-    grid->printGrid();
+    grid->randomize();
+    grid->print();
+    grid->update();
+    grid->print();
 }
 
 
