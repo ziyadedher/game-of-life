@@ -1,0 +1,10 @@
+# Ignore everything inside the bin folder but README.md
+bin/*
+!bin/README.md
+
+# Ignore everything inside the build folder but README.md
+build/*
+!build/README.md
+
+.*_time
+runner
