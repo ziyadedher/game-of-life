@@ -7,17 +7,38 @@ This is a rendition of the Game of Life in the C++ language, using modular and s
 Currently, the program runs only one generation, it is incomplete. The edges of the grid are considered dead cells, and thus may cause complications when live cells are near the edges.
 Furthermore, the program is currently not interactive. The grid is always 10 by 10 and randomized at start, and one generation is always calculated.
 
+
 ## Roadmap ##
 All of the features that I want to be implemented in the future are here.
 
-Near:
+#### Near: ####
 * Allow the user to input the height and width of the grid, as well as to be able to execute an evolution.
 
-Future:
+#### Future: ####
 * Allow the user to input an execution speed and start the execution running a generation then waiting for the inputted amount of time and looping.
 * Make the grid interactive.
 * Better display system.
 * Saving and loading grids.
+
+
+## Installation ##
+#### Regular compile ####
+* Clone this repository.
+* In root folder of the repository execute `make`.
+* The executable is then in the root folder of the repository and can be accessed by executing `./golcpp`.
+
+#### Full installation ####
+* To install the program to the main `/usr/local/bin` directory, run `sudo make install` in the root folder of the repository.
+* The program can then be executed from any place on the system using `golcpp`.
+
+#### Full uninstallation ####
+* To uninstall the program from `/usr/local/bin`, run `sudo make uninstall` in the root folder of the repository.
+
+#### Debug ####
+* To create a debuggable executable, run `make debug` in the root folder of the repository.
+
+#### Cleaning the build and bin folders ####
+* To clean and remove all builds, run `make clean` in the root folder of the repository.
 
 
 ## License ##

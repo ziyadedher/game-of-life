@@ -18,40 +18,40 @@
  *
 /*/
 
-/* Header for the generic grid. */
+/* Header for all general input function, contains the code as well. */
 
 /* HEADER START */
 
 
-#ifndef SRC_GRID_H
-#define SRC_GRID_H
+#ifndef SRC_PROCS_INPUT_H
+#define SRC_PROCS_INPUT_H
 
-#include <vector>
-#include <cstdio>
-#include "cell.hpp"
-
-
-class Grid {
-    public:
-        size_t x;
-        size_t y;
-
-        std::vector<std::vector<Cell>> cells;
-
-        Grid (size_t iX, size_t iY);
-
-        void randomizeGrid ();
-        void printGrid ();
-
-        void checkAll ();
-        void updateAll ();
-
-    private:
-        void initGrid ();
-};
+#include <iostream>
+#include <string>
 
 
-#endif /* SRC_GRID_H */
+namespace proc {
+    void getInitialInput (size_t* width, size_t* height) {
+        std::cout << "Welcome to Game of Life - C++ edition." << '\n'
+                  << "Copyright (C) 2016 Ziyad Edher" << "\n\n";
+
+        std::cout << "Width of the grid:  ";
+        std::string w;
+        std::cin >> w;
+
+        std::cout << "Height of the grid: ";
+        std::string h;
+        std::cin >> h;
+
+        std::cout << '\n';
+
+        *width = (size_t)std::stoi(w);
+        *height = (size_t)std::stoi(h);
+    }
+}
+
+
+#endif /* SRC_PROCS_INPUT_H */
 
 
 /* HEADER END */

@@ -23,8 +23,8 @@
 /* HEADER START */
 
 
-#ifndef SRC_CELL_H
-#define SRC_CELL_H
+#ifndef SRC_ENTITIES_CELL_H
+#define SRC_ENTITIES_CELL_H
 
 #include <cstdio>
 
@@ -59,7 +59,7 @@ class Cell {
 };
 
 
-#endif /* SRC_CELL_H */
+#endif /* SRC_ENTITIES_CELL_H */
 
 
 /* HEADER END */

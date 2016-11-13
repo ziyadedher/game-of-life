@@ -7,4 +7,4 @@ build/*
 !build/README.md
 
 .*_time
-runner
+golcpp

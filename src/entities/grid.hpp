@@ -18,30 +18,42 @@
  *
 /*/
 
-/* MAIN */
-/* Main application file, the execution starts, and should end here. */
+/* Header for the generic grid. */
 
-/* PROGRAM START */
-
-
-#include "entities/grid.hpp"
-#include "procs/input.hpp"
+/* HEADER START */
 
 
-int main () {
-    size_t width, height;
-    proc::getInitialInput(&width, &height);
+#ifndef SRC_ENTITIES_GRID_H
+#define SRC_ENTITIES_GRID_H
 
-    Grid* grid = new Grid(width, height);
-
-    grid->randomizeGrid();
-    grid->printGrid();
-    grid->checkAll();
-    grid->updateAll();
-    grid->printGrid();
-}
+#include <vector>
+#include <cstdio>
+#include "cell.hpp"
 
 
-/* PROGRAM END */
+class Grid {
+    public:
+        size_t x;
+        size_t y;
+
+        std::vector<std::vector<Cell>> cells;
+
+        Grid (size_t iX, size_t iY);
+
+        void randomizeGrid ();
+        void printGrid ();
+
+        void checkAll ();
+        void updateAll ();
+
+    private:
+        void initGrid ();
+};
+
+
+#endif /* SRC_ENTITIES_GRID_H */
+
+
+/* HEADER END */
 
 /* FILE END */

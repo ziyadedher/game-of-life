@@ -80,7 +80,7 @@ void Grid::updateAll () {
 void Grid::printGrid () {
     for (size_t i = 0; i < this->x; i++) {
         for (size_t j = 0; j < this->y; j++) {
-            printf("%c", this->cells.at(i).at(j).curChar);
+            printf("%c ", this->cells.at(i).at(j).curChar);
         }
         printf("\n");
     }

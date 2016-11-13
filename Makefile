@@ -1,6 +1,6 @@
 #### PROJECT SETTINGS ####
 # The name of the executable to be created
-BIN_NAME := runner
+BIN_NAME := golcpp
 # Compiler used
 CXX ?= clang
 # Extension of source files used in the project
@@ -238,23 +238,3 @@ $(BUILD_PATH)/%.o: $(SRC_PATH)/%.$(SRC_EXT)
 	$(CMD_PREFIX)$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@
 	@echo -en "\t Compile time: "
 	@$(END_TIME)
-
-
-
-TTARGET  := bin/tester
-STARGET  := bin/spiker
-TEST     := test/test.cpp
-SPIKE    := spike/spike.cpp
-
-# Build the test.cpp in the main /test/ directory, it should be a symlink to the current test
-test:
-	$(CXX) $(COMPILE_FLAGS) $(TEST) $(INCLUDES) $(LIBS) -o $(TTARGET)
-	@clear
-
-# Build the spike.cpp in the main /spike/ directory, it should be a symlink to the current spike
-spike:
-	$(CXX) $(COMPILE_FLAGS) $(SPIKE) $(LIBS) -o $(STARGET)
-	@clear
-
-
-.PHONY: spike clean
