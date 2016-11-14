@@ -26,11 +26,12 @@
 
 #include <cstdlib>
 #include <ctime>
+#include <ncurses.h>
 #include "grid.hpp"
 #include "cell.hpp"
 
 
-Grid::Grid (size_t iX, size_t iY) : x(iX), y(iY), cells() {
+Grid::Grid (size_t iX, size_t iY) : x(iX), y(iY), evo(0), cells() {
     init();
 }
 
@@ -64,16 +65,17 @@ void Grid::randomize () {
 void Grid::print () {
     for (size_t i = 0; i < this->x; i++) {
         for (size_t j = 0; j < this->y; j++) {
-            printf("%c ", this->cells.at(i).at(j).curChar);
+            printw("%c ", this->cells.at(i).at(j).curChar);
         }
-        printf("\n");
+        printw("\n");
     }
-    printf("\n");
+    printw("\n");
 }
 
-void Grid::update () {
+void Grid::evolve () {
     Grid::checkCells();
     Grid::updateCells();
+    this->evo++;
 }
 
 void Grid::checkCells () {

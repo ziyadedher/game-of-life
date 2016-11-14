@@ -36,13 +36,15 @@ class Grid {
         size_t x;
         size_t y;
 
+        size_t evo;
+
         std::vector<std::vector<Cell>> cells;
 
         Grid (size_t iX, size_t iY);
 
         void randomize ();
         void print ();
-        void update ();
+        void evolve ();
 
     private:
         void init ();

@@ -4,21 +4,25 @@ This is a rendition of the Game of Life in the C++ language, using modular and s
 
 
 ## Limitations ##
-Currently, the program runs only one generation, it is incomplete. The edges of the grid are considered dead cells, and thus may cause complications when live cells are near the edges.
-Furthermore, the program is currently not interactive. The grid is always 10 by 10 and randomized at start, and one generation is always calculated.
-
+Currently, the grid is not interactive, and can only be randomized and set at start.
 
 ## Roadmap ##
 All of the features that I want to be implemented in the future are here.
 
 #### Near: ####
-* Allow the user to input the height and width of the grid, as well as to be able to execute an evolution.
+* Allow the user to input an execution speed and start the execution running a generation then waiting for the inputted amount of time and looping.
 
 #### Future: ####
-* Allow the user to input an execution speed and start the execution running a generation then waiting for the inputted amount of time and looping.
 * Make the grid interactive.
 * Better display system.
 * Saving and loading grids.
+
+#### Completed: ####
+* Allow the user to input the height and width of the grid, as well as to be able to execute an evolution.
+
+
+## Prerequisites ##
+* `sudo apt install libncurses5-dev`
 
 
 ## Installation ##

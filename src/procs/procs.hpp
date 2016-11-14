@@ -28,25 +28,48 @@
 
 #include <iostream>
 #include <string>
+#include <ncurses.h>
+#include "../entities/grid.hpp"
 
 
 namespace proc {
+    void initCurses () {
+        initscr();
+    }
+
+    void terminateCurse () {
+        getch();
+        endwin();
+    }
+
     void getInitialInput (size_t* width, size_t* height) {
-        std::cout << "Welcome to Game of Life - C++ edition." << '\n'
-                  << "Copyright (C) 2016 Ziyad Edher" << "\n\n";
+        printw("Welcome to Game of Life - C++ edition.\n");
+        printw("Copyright (C) 2016 Ziyad Edher\n\n");
 
-        std::cout << "Width of the grid:  ";
-        std::string w;
-        std::cin >> w;
+        printw("Width of the grid:  ");
+        char w[4];
+        getstr(w);
 
-        std::cout << "Height of the grid: ";
-        std::string h;
-        std::cin >> h;
+        printw("Height of the grid: ");
+        char h[4];
+        getstr(h);
 
-        std::cout << '\n';
+        *width = (size_t)std::stoi(std::string(w));
+        *height = (size_t)std::stoi(std::string(h));
+    }
 
-        *width = (size_t)std::stoi(w);
-        *height = (size_t)std::stoi(h);
+    [[noreturn]]
+    void startEvolutionLoop (Grid* grid) {
+        clear();
+        while (true) {
+            move(0, 0);
+            grid->print();
+            printw("\nEvolution: %lu\n", grid->evo);
+            printw("Press any button to evolve...");
+            getch();
+            refresh();
+            grid->evolve();
+        }
     }
 }
 
