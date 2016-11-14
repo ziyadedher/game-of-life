@@ -45,22 +45,20 @@ void Grid::init (bool random) {
 
     // Loops through all the positions where a cell could be
     for (size_t i = 0; i < this->x; i++) {
-        std::vector<Cell> row;
+        std::vector<Cell> col;
 
         for (size_t j = 0; j < this->y; j++) {
-            bool status;
+            bool status = false;
 
             // If random is passed, then assign status to a random value, otherwise, just set it to false
             if (random) {
                 status = rand() % 2 == 1;
-            } else {
-                status = false;
             }
 
             Cell* cell = new Cell(i, j, this, status);
-            row.push_back(*cell);
+            col.push_back(*cell);
         }
-        iCells.push_back(row);
+        iCells.push_back(col);
     }
 
     // Assigns the original cells to the newly created vector

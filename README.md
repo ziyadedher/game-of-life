@@ -4,21 +4,22 @@ This is a rendition of the Game of Life in the C++ language, using modular and s
 
 
 ## Limitations ##
-Currently, the grid is not interactive, and can only be randomized and set at start.
+Cannot save or load grids. The edges function as dead cells
 
 ## Roadmap ##
 All of the features that I want to be implemented in the future are here.
 
 #### Near: ####
-* Make the grid interactive.
+* Saving and loading grids.
 
 #### Future: ####
-* Saving and loading grids.
+ * **suggestions**
 
 #### Completed: ####
 * Allow the user to input the height and width of the grid, as well as to be able to execute an evolution.
 * Better display system.
 * Allow the user to input an execution speed and start the execution running a generation then waiting for the inputted amount of time and looping.
+* Make the grid interactive.
 
 
 ## Prerequisites ##

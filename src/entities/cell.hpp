@@ -38,6 +38,7 @@ class Cell {
         char curChar;
         bool isAlive;
 
+        void setAlive (bool alive);
         void checkAlive ();
         void update ();
 

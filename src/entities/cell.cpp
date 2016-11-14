@@ -29,12 +29,16 @@
 
 
 Cell::Cell (size_t iX, size_t iY, Grid* grid, bool status) : curChar(), isAlive(status), x(iX), y(iY), parentGrid(grid), willBeAlive(), neighbours() {
-    // Sets initial `curChar` depending on the initial status
+    this->setAlive (status);
+}
+
+void Cell::setAlive (bool status) {
     if (status) {
         this->curChar = Cell::onChar;
     } else {
         this->curChar = Cell::offChar;
     }
+    this->isAlive = status;
 }
 
 // Wrapper function to fully check if the cell should be alive next evolution

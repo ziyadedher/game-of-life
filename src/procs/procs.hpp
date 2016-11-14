@@ -36,6 +36,7 @@ namespace proc {
     // Initializes curses, formalities
     void initCurses () {
         initscr();
+        keypad(stdscr, TRUE);
     }
 
     // Terminates curses, formalities
@@ -79,12 +80,21 @@ namespace proc {
     // Heart of the display of the program
     void startEvolutionLoop (Grid* grid, size_t speed) {
         clear();
+        move(0, 0);
+
+        // Stores the cursor position between prints
+        size_t cursorPosX = 0;
+        size_t cursorPosY = 0;
 
         // Infinitely loops until 'q' is pressed
         while (true) {
             // First of all displays the grid with supporting information
             displayGrid(grid);
-            printw("[Space] Evolve once        [Enter] Run evolutions        [q] Exit\n");
+            printw("[Space] Evolve once        [Enter] Run evolutions        [q] Exit         [a] Toggle cell\n");
+
+            // Move the cursor and display it
+            move((int)cursorPosY, (int)cursorPosX);
+            refresh();
 
             // Gets the most recently touched character
             int c = getch();
@@ -92,6 +102,7 @@ namespace proc {
             //  - if space (' ') evolves and loops again
             //  - if ('q') ends the loops
             //  - if enter ('\n') starts a sub-loop similar to the main one, but waits for any character to stop
+            //  - if any of the arrow keys, set the cursor position accordingly (X moves by 2 since there are spaces between the characters)
             if (c == ' ') {
                 grid->evolve();
             } else if (c == 'q') {
@@ -103,7 +114,7 @@ namespace proc {
                     grid->evolve();
                     displayGrid(grid);
 
-                    printw("Press any key to end execution...                       \n"); // Extra whitespace to override previously written stuff in this area
+                    printw("Press any key to end execution...\n");
 
                     // If there has been something inputted, then break out of this sub-loop
                     if (getch() != ERR) {
@@ -112,7 +123,34 @@ namespace proc {
 
                     usleep((__useconds_t)speed * 1000); // Sleep the desired amount of time (in micro seconds converted to milliseconds)
                 }
+            } else if (c == 'a') {
+                Cell* curCell = &grid->cells.at(cursorPosY).at(cursorPosX / 2);
+                curCell->setAlive(!curCell->isAlive);
             }
+
+            // Checks the arrow keys, and makes sure that moving the cursor won't overflow the `size_t` or go out of bounds of the array
+            else if (c == KEY_UP) {
+                if (cursorPosY < 1) {
+                    continue;
+                }
+                cursorPosY -= 1;
+            } else if (c == KEY_LEFT) {
+                if (cursorPosX < 2) {
+                    continue;
+                }
+                cursorPosX -= 2;
+            } else if (c == KEY_DOWN) {
+                if (cursorPosY >= grid->y - 1) {
+                    continue;
+                }
+                cursorPosY += 1;
+            } else if (c == KEY_RIGHT) {
+                if (cursorPosX / 2 >= grid->x - 1) {
+                    continue;
+                }
+                cursorPosX += 2;
+            }
+
         }
     }
 }
