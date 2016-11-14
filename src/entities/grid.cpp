@@ -31,37 +31,48 @@
 #include "cell.hpp"
 
 
-Grid::Grid (size_t iX, size_t iY) : x(iX), y(iY), evo(0), cells() {
-    init();
+Grid::Grid (size_t iX, size_t iY, bool random) : x(iX), y(iY), evolution(0), cells() {
+    init(random);
 }
 
-void Grid::init () {
-    std::vector<std::vector<Cell>> iCells;
-    for (size_t i = 0; i < this->x; i++) {
-        std::vector<Cell> row;
-        for (size_t j = 0; j < this->y; j++) {
-            Cell* cell = new Cell(i, j, this);
-            row.push_back(*cell);
-        }
-        iCells.push_back(row);
-    }
-    this->cells = iCells;
-}
-
-void Grid::randomize () {
+// Initializes the vector of Cells by allocating a new cell to each index of a 2d array of size `x` by `y`
+void Grid::init (bool random) {
+    // Assigns a random seed based off the current time
     srand((unsigned int)time(NULL));
+
+    // Temp storing of the cells before being allocated to the real property
     std::vector<std::vector<Cell>> iCells;
+
+    // Loops through all the positions where a cell could be
     for (size_t i = 0; i < this->x; i++) {
         std::vector<Cell> row;
+
         for (size_t j = 0; j < this->y; j++) {
-            Cell* cell = new Cell(i, j, this, rand() % 2 == 1);
+            bool status;
+
+            // If random is passed, then assign status to a random value, otherwise, just set it to false
+            if (random) {
+                status = rand() % 2 == 1;
+            } else {
+                status = false;
+            }
+
+            Cell* cell = new Cell(i, j, this, status);
             row.push_back(*cell);
         }
         iCells.push_back(row);
     }
+
+    // Assigns the original cells to the newly created vector
     this->cells = iCells;
 }
 
+// Wrapper function to randomize the grid
+void Grid::randomize () {
+    Grid::init(true);
+}
+
+// Prints the grid to curses
 void Grid::print () {
     for (size_t i = 0; i < this->x; i++) {
         for (size_t j = 0; j < this->y; j++) {
@@ -72,12 +83,15 @@ void Grid::print () {
     printw("\n");
 }
 
+// Wrapper function to evolve the entire grid, by first checking each cell, then updating them
 void Grid::evolve () {
     Grid::checkCells();
     Grid::updateCells();
-    this->evo++;
+    this->evolution++;
 }
 
+
+// Wrapper function to check each cell of the grid
 void Grid::checkCells () {
     for (size_t i = 0; i < this->x; i++) {
         for (size_t j = 0; j < this->y; j++) {
@@ -86,6 +100,8 @@ void Grid::checkCells () {
     }
 }
 
+
+// Wrapper function to update each cell of the grid
 void Grid::updateCells () {
     for (size_t i = 0; i < this->x; i++) {
         for (size_t j = 0; j < this->y; j++) {

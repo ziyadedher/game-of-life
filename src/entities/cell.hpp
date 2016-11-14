@@ -26,9 +26,9 @@
 #ifndef SRC_ENTITIES_CELL_H
 #define SRC_ENTITIES_CELL_H
 
-#include <cstdio>
+#include <cstdio> // `size_t`
 
-
+// Forward declaration of Grid in order to bypass a circular dependency
 class Grid;
 
 class Cell {
@@ -38,8 +38,8 @@ class Cell {
         char curChar;
         bool isAlive;
 
-        void checkAlive();
-        void update();
+        void checkAlive ();
+        void update ();
 
     private:
         static const char onChar = '#';
@@ -54,8 +54,8 @@ class Cell {
         int neighbours;
 
 
-        void checkNeighbours();
-        void checkStatus();
+        void checkNeighbours ();
+        void checkStatus ();
 };
 
 

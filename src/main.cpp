@@ -34,8 +34,7 @@ int main () {
     size_t width, height, speed;
     proc::getInitialInput(&width, &height, &speed);
 
-    Grid* grid = new Grid(height, width);
-    grid->randomize();
+    Grid* grid = new Grid(height, width, true);
 
     proc::startEvolutionLoop(grid, speed);
 

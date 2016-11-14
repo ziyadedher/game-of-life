@@ -10,15 +10,15 @@ Currently, the grid is not interactive, and can only be randomized and set at st
 All of the features that I want to be implemented in the future are here.
 
 #### Near: ####
-* Allow the user to input an execution speed and start the execution running a generation then waiting for the inputted amount of time and looping.
+* Make the grid interactive.
 
 #### Future: ####
-* Make the grid interactive.
-* Better display system.
 * Saving and loading grids.
 
 #### Completed: ####
 * Allow the user to input the height and width of the grid, as well as to be able to execute an evolution.
+* Better display system.
+* Allow the user to input an execution speed and start the execution running a generation then waiting for the inputted amount of time and looping.
 
 
 ## Prerequisites ##

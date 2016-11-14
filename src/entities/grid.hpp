@@ -27,7 +27,6 @@
 #define SRC_ENTITIES_GRID_H
 
 #include <vector>
-#include <cstdio>
 #include "cell.hpp"
 
 
@@ -36,18 +35,18 @@ class Grid {
         size_t x;
         size_t y;
 
-        size_t evo;
+        size_t evolution;
 
         std::vector<std::vector<Cell>> cells;
 
-        Grid (size_t iX, size_t iY);
+        Grid (size_t iX, size_t iY, bool random = false);
 
         void randomize ();
         void print ();
         void evolve ();
 
     private:
-        void init ();
+        void init (bool random);
         void checkCells ();
         void updateCells ();
 };

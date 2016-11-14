@@ -26,23 +26,25 @@
 #ifndef SRC_PROCS_INPUT_H
 #define SRC_PROCS_INPUT_H
 
-#include <iostream>
-#include <unistd.h>
-#include <string>
+#include <unistd.h> // `usleep`
+#include <string>   // `std::string`, `std::stoi`
 #include <ncurses.h>
 #include "../entities/grid.hpp"
 
 
 namespace proc {
+    // Initializes curses, formalities
     void initCurses () {
         initscr();
     }
 
+    // Terminates curses, formalities
     void terminateCurse () {
         getch();
         endwin();
     }
 
+    // Gets pointers to the variables wanting to be set, and assigns their startup values
     void getInitialInput (size_t* width, size_t* height, size_t* speed) {
         printw("Welcome to Game of Life - C++ edition.\n");
         printw("Copyright (C) 2016 Ziyad Edher\n\n");
@@ -59,40 +61,56 @@ namespace proc {
         char s[16];
         getstr(s);
 
+        // Converts the `char` array into a string,
+        // then from string into an `int`,
+        // then from `int` into a `size_t` for each
         *width = (size_t)std::stoi(std::string(w));
         *height = (size_t)std::stoi(std::string(h));
         *speed = (size_t)std::stoi(std::string(s));
     }
 
+    // Small macro to display the grid, overwrite any grid before it, and display the evolution count
     void displayGrid (Grid* grid) {
         move(0, 0);
         grid->print();
-        printw("\nEvolution: %lu\n", grid->evo);
+        printw("\nEvolution: %lu\n", grid->evolution);
     }
 
+    // Heart of the display of the program
     void startEvolutionLoop (Grid* grid, size_t speed) {
         clear();
+
+        // Infinitely loops until 'q' is pressed
         while (true) {
+            // First of all displays the grid with supporting information
             displayGrid(grid);
             printw("[Space] Evolve once        [Enter] Run evolutions        [q] Exit\n");
 
+            // Gets the most recently touched character
             int c = getch();
+
+            //  - if space (' ') evolves and loops again
+            //  - if ('q') ends the loops
+            //  - if enter ('\n') starts a sub-loop similar to the main one, but waits for any character to stop
             if (c == ' ') {
                 grid->evolve();
             } else if (c == 'q') {
                 return;
             } else if (c == '\n') {
-                nodelay(stdscr, TRUE);
+                nodelay(stdscr, TRUE); // Getting of the input is asyncronous
+                // Infinitely loops until any key is pressed
                 while (true) {
                     grid->evolve();
                     displayGrid(grid);
 
-                    printw("Press any key to end execution...                       \n");
+                    printw("Press any key to end execution...                       \n"); // Extra whitespace to override previously written stuff in this area
+
+                    // If there has been something inputted, then break out of this sub-loop
                     if (getch() != ERR) {
                         break;
                     }
 
-                    usleep((__useconds_t)speed * 1000);
+                    usleep((__useconds_t)speed * 1000); // Sleep the desired amount of time (in micro seconds converted to milliseconds)
                 }
             }
         }
