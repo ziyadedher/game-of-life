@@ -27,6 +27,7 @@
 #define SRC_PROCS_INPUT_H
 
 #include <iostream>
+#include <unistd.h>
 #include <string>
 #include <ncurses.h>
 #include "../entities/grid.hpp"
@@ -42,33 +43,58 @@ namespace proc {
         endwin();
     }
 
-    void getInitialInput (size_t* width, size_t* height) {
+    void getInitialInput (size_t* width, size_t* height, size_t* speed) {
         printw("Welcome to Game of Life - C++ edition.\n");
         printw("Copyright (C) 2016 Ziyad Edher\n\n");
 
-        printw("Width of the grid:  ");
+        printw("Width of the grid:    ");
         char w[4];
         getstr(w);
 
-        printw("Height of the grid: ");
+        printw("Height of the grid:   ");
         char h[4];
         getstr(h);
 
+        printw("Execution speed (ms): ");
+        char s[16];
+        getstr(s);
+
         *width = (size_t)std::stoi(std::string(w));
         *height = (size_t)std::stoi(std::string(h));
+        *speed = (size_t)std::stoi(std::string(s));
     }
 
-    [[noreturn]]
-    void startEvolutionLoop (Grid* grid) {
+    void displayGrid (Grid* grid) {
+        move(0, 0);
+        grid->print();
+        printw("\nEvolution: %lu\n", grid->evo);
+    }
+
+    void startEvolutionLoop (Grid* grid, size_t speed) {
         clear();
         while (true) {
-            move(0, 0);
-            grid->print();
-            printw("\nEvolution: %lu\n", grid->evo);
-            printw("Press any button to evolve...");
-            getch();
-            refresh();
-            grid->evolve();
+            displayGrid(grid);
+            printw("[Space] Evolve once        [Enter] Run evolutions        [q] Exit\n");
+
+            int c = getch();
+            if (c == ' ') {
+                grid->evolve();
+            } else if (c == 'q') {
+                return;
+            } else if (c == '\n') {
+                nodelay(stdscr, TRUE);
+                while (true) {
+                    grid->evolve();
+                    displayGrid(grid);
+
+                    printw("Press any key to end execution...                       \n");
+                    if (getch() != ERR) {
+                        break;
+                    }
+
+                    usleep((__useconds_t)speed * 1000);
+                }
+            }
         }
     }
 }

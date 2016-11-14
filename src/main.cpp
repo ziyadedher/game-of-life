@@ -26,19 +26,20 @@
 
 #include "entities/grid.hpp"
 #include "procs/procs.hpp"
-#include <ncurses.h>
 
 
 int main () {
     proc::initCurses();
 
-    size_t width, height;
-    proc::getInitialInput(&width, &height);
+    size_t width, height, speed;
+    proc::getInitialInput(&width, &height, &speed);
 
     Grid* grid = new Grid(height, width);
-
     grid->randomize();
-    proc::startEvolutionLoop(grid);
+
+    proc::startEvolutionLoop(grid, speed);
+
+    proc::terminateCurse();
 }
 
 
