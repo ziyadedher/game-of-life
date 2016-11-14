@@ -6,6 +6,7 @@ This is a rendition of the Game of Life in the C++ language, using modular and s
 ## Features ##
  * Play a fully functional rendition of Conway's Game of Life in C++.
  * Create a grid with inputted size parameters.
+ * Optionally randomize the grid at start for random fun patterns.
  * Evolve step-by-step.
  * Automatically evolve every interval set by the user.
  * Modify cell status between evolutions.

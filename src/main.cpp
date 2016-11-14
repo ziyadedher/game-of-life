@@ -32,11 +32,16 @@ int main () {
     proc::initCurses();
 
     size_t width, height, speed;
-    proc::getInitialInput(&width, &height, &speed);
+    bool randomize;
 
-    Grid* grid = new Grid(height, width, false);
-
-    proc::startEvolutionLoop(grid, speed);
+    try {
+        proc::getInitialInput(&width, &height, &speed, &randomize);
+        Grid* grid = new Grid(height, width, randomize);
+        proc::startEvolutionLoop(grid, speed);
+    } catch (...) {
+        clear();
+        printw("One or more inputs were not valid.\nPress any key to terminate...");
+    }
 
     proc::terminateCurse();
 }

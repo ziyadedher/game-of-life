@@ -46,7 +46,7 @@ namespace proc {
     }
 
     // Gets pointers to the variables wanting to be set, and assigns their startup values
-    void getInitialInput (size_t* width, size_t* height, size_t* speed) {
+    void getInitialInput (size_t* width, size_t* height, size_t* speed, bool* randomize) {
         printw("Welcome to Game of Life - C++ edition.\n");
         printw("Copyright (C) 2016 Ziyad Edher\n\n");
 
@@ -61,6 +61,21 @@ namespace proc {
         printw("Execution speed (ms): ");
         char s[16];
         getstr(s);
+
+        printw("Randomize grid (y/n): ");
+        char r;
+        getstr(&r);
+        if (r == 'y') {
+            *randomize = true;
+        } else if (r == 'n') {
+            *randomize = false;
+        } else {
+            printw("Unknown value `%c`, not randomizing.\n", r);
+            *randomize = false;
+        }
+
+        printw("\nPress any button to generate...");
+        getch();
 
         // Converts the `char` array into a string,
         // then from string into an `int`,
