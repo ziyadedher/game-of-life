@@ -3,17 +3,24 @@ The **Game of Life**, also known simply as **Life**, is a [cellular automaton](h
 This is a rendition of the Game of Life in the C++ language, using modular and structured systems.
 
 
-## Limitations ##
-Cannot save or load grids. The edges function as dead cells
+## Features ##
+ * Play a fully functional rendition of Conway's Game of Life in C++.
+ * Create a grid with inputted size parameters.
+ * Evolve step-by-step.
+ * Automatically evolve every interval set by the user.
+ * Modify cell status between evolutions.
+
+
+---
+
 
 ## Roadmap ##
-All of the features that I want to be implemented in the future are here.
 
 #### Near: ####
 * Saving and loading grids.
 
 #### Future: ####
- * **suggestions**
+ * Pre-built "templates" that insert certain well-known Game of Life entities at the cursor.
 
 #### Completed: ####
 * Allow the user to input the height and width of the grid, as well as to be able to execute an evolution.
@@ -22,18 +29,30 @@ All of the features that I want to be implemented in the future are here.
 * Make the grid interactive.
 
 
+<br>
+
+
+## Limitations ##
+ * The grid is not of infinite size; thus, the program behaves incorrectly when cells are at the edges of the grid.
+ * Attempting to make the size of the grid larger than the size of the terminal the program is executed in will result in unpredictable complications.
+
+
+---
+
+
 ## Prerequisites ##
 * `sudo apt install libncurses5-dev`
 
 
 ## Installation ##
 #### Regular compile ####
-* Clone this repository.
-* In root folder of the repository execute `make`.
-* The executable is then in the root folder of the repository and can be accessed by executing `./golcpp`.
+* Clone this repository. [`git clone https://github.com/Wintro/game-of-life.git`]
+* Navigate to the root folder of the repository. [`cd game-of-life`]
+* In root folder of the repository compile the program. [`make`]
+* The compiler program is then in the root folder of the repository and can be executed. [`./golcpp`]
 
 #### Full installation ####
-* To install the program to the main `/usr/local/bin` directory, run `sudo make install` in the root folder of the repository.
+* To install the program to `/usr/local/bin`, run `sudo make install` in the root folder of the repository.
 * The program can then be executed from any place on the system using `golcpp`.
 
 #### Full uninstallation ####
@@ -44,6 +63,9 @@ All of the features that I want to be implemented in the future are here.
 
 #### Cleaning the build and bin folders ####
 * To clean and remove all builds, run `make clean` in the root folder of the repository.
+
+
+---
 
 
 ## License ##
