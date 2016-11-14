@@ -11,7 +11,7 @@ This is a rendition of the Game of Life in the C++ language, using modular and s
  * Modify cell status between evolutions.
 
 
----
+<br>
 
 
 ## Roadmap ##
@@ -37,7 +37,7 @@ This is a rendition of the Game of Life in the C++ language, using modular and s
  * Attempting to make the size of the grid larger than the size of the terminal the program is executed in will result in unpredictable complications.
 
 
----
+<br>
 
 
 ## Prerequisites ##
@@ -65,7 +65,7 @@ This is a rendition of the Game of Life in the C++ language, using modular and s
 * To clean and remove all builds, run `make clean` in the root folder of the repository.
 
 
----
+<br>
 
 
 ## License ##
