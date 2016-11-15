@@ -8,3 +8,5 @@ build/*
 
 .*_time
 golcpp
+saves/full/*
+!saves/full/empty10x10

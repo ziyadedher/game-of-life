@@ -27,6 +27,7 @@
 #define SRC_ENTITIES_GRID_H
 
 #include <vector>
+#include <string>
 #include "cell.hpp"
 
 
@@ -44,6 +45,8 @@ class Grid {
         void randomize ();
         void print ();
         void evolve ();
+        void toggleAliveAt (size_t x_, size_t y_);
+        std::string toString ();
 
     private:
         void init (bool random);

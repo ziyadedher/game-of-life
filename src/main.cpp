@@ -24,7 +24,6 @@
 /* PROGRAM START */
 
 
-#include "entities/grid.hpp"
 #include "procs/procs.hpp"
 
 
@@ -36,8 +35,8 @@ int main () {
 
     try {
         proc::getInitialInput(&width, &height, &speed, &randomize);
-        Grid* grid = new Grid(height, width, randomize);
-        proc::startEvolutionLoop(grid, speed);
+        Grid* grid = new Grid(width, height, randomize);
+        proc::mainLoop(grid, speed);
     } catch (...) {
         clear();
         printw("One or more inputs were not valid.\nPress any key to terminate...");

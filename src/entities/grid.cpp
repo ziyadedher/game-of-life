@@ -24,8 +24,6 @@
 /* PROGRAM START */
 
 
-#include <cstdlib>
-#include <ctime>
 #include <ncurses.h>
 #include "grid.hpp"
 #include "cell.hpp"
@@ -34,6 +32,7 @@
 Grid::Grid (size_t iX, size_t iY, bool random) : x(iX), y(iY), evolution(0), cells() {
     init(random);
 }
+
 
 // Initializes the vector of Cells by allocating a new cell to each index of a 2d array of size `x` by `y`
 void Grid::init (bool random) {
@@ -65,21 +64,24 @@ void Grid::init (bool random) {
     this->cells = iCells;
 }
 
+
 // Wrapper function to randomize the grid
 void Grid::randomize () {
     Grid::init(true);
 }
 
+
 // Prints the grid to curses
 void Grid::print () {
-    for (size_t i = 0; i < this->x; i++) {
-        for (size_t j = 0; j < this->y; j++) {
+    for (size_t j = 0; j < this->y; j++) {
+        for (size_t i = 0; i < this->x; i++) {
             printw("%c ", this->cells.at(i).at(j).curChar);
         }
         printw("\n");
     }
     printw("\n");
 }
+
 
 // Wrapper function to evolve the entire grid, by first checking each cell, then updating them
 void Grid::evolve () {
@@ -106,6 +108,31 @@ void Grid::updateCells () {
             this->cells.at(i).at(j).update();
         }
     }
+}
+
+
+// Toggles the cells status at `x`, `y`
+void Grid::toggleAliveAt (size_t x_, size_t y_) {
+    Cell* curCell = &this->cells.at(x_).at(y_);
+    curCell->setAlive(!curCell->isAlive);
+}
+
+
+// Converts the grid to a string format in order to be saved
+std::string Grid::toString () {
+    std::string save = "";
+    save.append(std::to_string(this->x));
+    save.append(" ");
+    save.append(std::to_string(this->y));
+    save.append(" ");
+    save.append(std::to_string(this->evolution));
+    save.append("\n");
+    for (size_t i = 0; i < this->x; i++) {
+        for (size_t j = 0; j < this->y; j++) {
+            save.append(std::to_string(this->cells.at(i).at(j).isAlive));
+        }
+    }
+    return save;
 }
 
 

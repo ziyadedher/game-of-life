@@ -11,7 +11,7 @@ SRC_PATH = src
 LIBS =
 # General compiler flags
 COMPILE_FLAGS = -std=c++14 -g -O -Wall -Weffc++ -pedantic  \
--pedantic-errors -Wextra -Waggregate-return -Wcast-align \
+-pedantic-errors -Wextra -Wcast-align \
 -Wcast-qual -Wconversion \
 -Wdisabled-optimization \
 -Wfloat-equal -Wformat=2 \

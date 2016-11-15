@@ -29,6 +29,7 @@
 #include <unistd.h> // `usleep`
 #include <string>   // `std::string`, `std::stoi`
 #include <ncurses.h>
+#include <fstream>  // file operations
 #include "../entities/grid.hpp"
 
 
@@ -39,11 +40,28 @@ namespace proc {
         keypad(stdscr, TRUE);
     }
 
+
     // Terminates curses, formalities
     void terminateCurse () {
         getch();
         endwin();
     }
+
+
+    // Gets the result of a yes/no question with handling of unknown values
+    bool getYesNo () {
+        char choice;
+        getstr(&choice);
+        if (choice == 'y') {
+            return true;
+        } else if (choice == 'n') {
+            return false;
+        } else {
+            printw("Unknown value `%c`, defaulting to false.\n", choice);
+            return false;
+        }
+    }
+
 
     // Gets pointers to the variables wanting to be set, and assigns their startup values
     void getInitialInput (size_t* width, size_t* height, size_t* speed, bool* randomize) {
@@ -63,16 +81,7 @@ namespace proc {
         getstr(s);
 
         printw("Randomize grid (y/n): ");
-        char r;
-        getstr(&r);
-        if (r == 'y') {
-            *randomize = true;
-        } else if (r == 'n') {
-            *randomize = false;
-        } else {
-            printw("Unknown value `%c`, not randomizing.\n", r);
-            *randomize = false;
-        }
+        *randomize = getYesNo();
 
         printw("\nPress any button to generate...");
         getch();
@@ -85,6 +94,7 @@ namespace proc {
         *speed = (size_t)std::stoi(std::string(s));
     }
 
+
     // Small macro to display the grid, overwrite any grid before it, and display the evolution count
     void displayGrid (Grid* grid) {
         move(0, 0);
@@ -92,8 +102,66 @@ namespace proc {
         printw("\nEvolution: %lu\n", grid->evolution);
     }
 
+
+    // Saves a given grid to a given file with no questions asked
+    void fullSaveToFile (Grid* grid, std::string fileName) {
+        std::ofstream file;
+        file.open("saves/full/" + fileName);
+        file << grid->toString();
+        file.close();
+    }
+
+
+    // Asks the user for input on what and where to save a given grid
+    void askFileSave (Grid* grid) {
+        clear();
+        move(0, 0);
+
+        printw("Enter the file name: ");
+        char name[64];
+        getstr(name);
+
+        std::ifstream file("saves/full/" + std::string(name));
+
+        if (file.good()) {
+            printw("This file already exists, overwrite (y/n): ");
+            bool choice = getYesNo();
+            if (!choice) {
+                printw("Aborting file save.\nPress any key to continue...");
+                getch();
+                return;
+            }
+        }
+
+        fullSaveToFile(grid, std::string(name));
+        printw("The file has been saved to `saves/full/%s`.\n", name);
+        printw("Press any key to continue...");
+        getch();
+    }
+
+
+    // Loops evolutions without user input until a key is pressed
+    void loopEvos (Grid* grid, size_t speed) {
+        nodelay(stdscr, TRUE); // Getting of the input is asyncronous
+        // Infinitely loops until any key is pressed
+        while (true) {
+            grid->evolve();
+            displayGrid(grid);
+
+            printw("Press any key to end execution...\n");
+
+            // If there has been something inputted, then break out of this sub-loop
+            if (getch() != ERR) {
+                break;
+            }
+
+            usleep((__useconds_t)speed * 1000); // Sleep the desired amount of time (in micro seconds converted to milliseconds)
+        }
+    }
+
+
     // Heart of the display of the program
-    void startEvolutionLoop (Grid* grid, size_t speed) {
+    void mainLoop (Grid* grid, size_t speed) {
         clear();
         move(0, 0);
 
@@ -105,7 +173,7 @@ namespace proc {
         while (true) {
             // First of all displays the grid with supporting information
             displayGrid(grid);
-            printw("[Space] Evolve once        [Enter] Run evolutions        [q] Exit         [a] Toggle cell\n");
+            printw("[Space] Evolve once        [Enter] Run evolutions\n[a] Toggle cell            [q] Exit              \n[s] Save to file           \n");
 
             // Move the cursor and display it
             move((int)cursorPosY, (int)cursorPosX);
@@ -114,33 +182,17 @@ namespace proc {
             // Gets the most recently touched character
             int c = getch();
 
-            //  - if space (' ') evolves and loops again
-            //  - if ('q') ends the loops
-            //  - if enter ('\n') starts a sub-loop similar to the main one, but waits for any character to stop
-            //  - if any of the arrow keys, set the cursor position accordingly (X moves by 2 since there are spaces between the characters)
+            // Parses what to do with that character
             if (c == ' ') {
                 grid->evolve();
             } else if (c == 'q') {
                 return;
             } else if (c == '\n') {
-                nodelay(stdscr, TRUE); // Getting of the input is asyncronous
-                // Infinitely loops until any key is pressed
-                while (true) {
-                    grid->evolve();
-                    displayGrid(grid);
-
-                    printw("Press any key to end execution...\n");
-
-                    // If there has been something inputted, then break out of this sub-loop
-                    if (getch() != ERR) {
-                        break;
-                    }
-
-                    usleep((__useconds_t)speed * 1000); // Sleep the desired amount of time (in micro seconds converted to milliseconds)
-                }
+                loopEvos(grid, speed);
             } else if (c == 'a') {
-                Cell* curCell = &grid->cells.at(cursorPosY).at(cursorPosX / 2);
-                curCell->setAlive(!curCell->isAlive);
+                grid->toggleAliveAt(cursorPosX / 2, cursorPosY);
+            } else if (c == 's') {
+                askFileSave(grid);
             }
 
             // Checks the arrow keys, and makes sure that moving the cursor won't overflow the `size_t` or go out of bounds of the array
@@ -165,7 +217,6 @@ namespace proc {
                 }
                 cursorPosX += 2;
             }
-
         }
     }
 }

@@ -32,6 +32,7 @@ Cell::Cell (size_t iX, size_t iY, Grid* grid, bool status) : curChar(), isAlive(
     this->setAlive (status);
 }
 
+
 void Cell::setAlive (bool status) {
     if (status) {
         this->curChar = Cell::onChar;
@@ -41,11 +42,13 @@ void Cell::setAlive (bool status) {
     this->isAlive = status;
 }
 
+
 // Wrapper function to fully check if the cell should be alive next evolution
 void Cell::checkAlive () {
     Cell::checkNeighbours();
     Cell::checkStatus();
 }
+
 
 // Updates the cell to its desired state, also updates the `curChar`
 void Cell::update () {
@@ -56,6 +59,7 @@ void Cell::update () {
         curChar = Cell::offChar;
     }
 }
+
 
 // Checks all eight cells around this cell to see how many live neighbours it has
 void Cell::checkNeighbours () {
@@ -83,6 +87,7 @@ void Cell::checkNeighbours () {
         }
     }
 }
+
 
 // Checks whether the cell will be dead or alive next round based on the rules of Conway's Game of Life:
 void Cell::checkStatus () {
