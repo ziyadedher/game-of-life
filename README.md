@@ -6,6 +6,9 @@ This is a rendition of the Game of Life in the C++ language, using modular and s
 ## Features ##
  * Play a fully functional rendition of Conway's Game of Life in C++.
  * Create a grid with inputted size parameters.
+ * Save any grid you want in a human-readable save format.
+ * Modify the saves by hand.
+ * Load any save file that matches the specifications.
  * Optionally randomize the grid at start for random fun patterns.
  * Evolve step-by-step.
  * Automatically evolve every interval set by the user.
@@ -18,16 +21,18 @@ This is a rendition of the Game of Life in the C++ language, using modular and s
 ## Roadmap ##
 
 #### Near: ####
-* Saving and loading grids.
+* Pre-built "templates" that insert certain well-known Game of Life entities at the cursor.
 
 #### Future: ####
- * Pre-built "templates" that insert certain well-known Game of Life entities at the cursor.
+* Polish UI.
+* Write tests.
 
 #### Completed: ####
 * Allow the user to input the height and width of the grid, as well as to be able to execute an evolution.
 * Better display system.
 * Allow the user to input an execution speed and start the execution running a generation then waiting for the inputted amount of time and looping.
 * Make the grid interactive.
+* Saving and loading grids.
 
 
 <br>

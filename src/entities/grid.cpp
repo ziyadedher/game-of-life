@@ -45,7 +45,6 @@ void Grid::init (bool random) {
     // Loops through all the positions where a cell could be
     for (size_t i = 0; i < this->x; i++) {
         std::vector<Cell> col;
-
         for (size_t j = 0; j < this->y; j++) {
             bool status = false;
 
@@ -124,8 +123,6 @@ std::string Grid::toString () {
     save.append(std::to_string(this->x));
     save.append(" ");
     save.append(std::to_string(this->y));
-    save.append(" ");
-    save.append(std::to_string(this->evolution));
     save.append("\n");
     for (size_t i = 0; i < this->x; i++) {
         for (size_t j = 0; j < this->y; j++) {
@@ -133,6 +130,56 @@ std::string Grid::toString () {
         }
     }
     return save;
+}
+
+
+// Converts a string in the right format to a grid
+Grid* Grid::fromString (std::string save) {
+    size_t index = 0;   // Stores which character we are working on
+    std::string x_, y_; // Stores temporary values of the string that will be converted to a digit
+
+    // Initialize the variable to store each character, assign it to the first character,
+    // and begin looping and appending each character we across until a space is reached (breaker)
+    char c = save.at(index);
+    while (c != ' ') {
+        x_ += c;
+        index++;
+        c = save.at(index);
+    }
+    index++; // To skip the space
+
+    // Set the character to the next character and begin doing the same thing as before except until a new line is hit
+    c = save.at(index);
+    while (c != '\n') {
+        y_ += c;
+        index++;
+        c = save.at(index);
+    }
+    index++; // To skip the newline
+
+    // Convert the strings to numbers
+    size_t xMax = std::stoul(x_);
+    size_t yMax = std::stoul(y_);
+
+    // Create a new grid with default values
+    Grid* grid = new Grid(xMax, yMax, false);
+
+    // Temporary storage of the cells before assigning to the main cells
+    std::vector<std::vector<Cell>> iCells;
+
+    // Loop through every cell in the grid and check the corresponding place in the string and attach its boolean value
+    for (size_t i = 0; i < xMax; i++) {
+        std::vector<Cell> col;
+        for (size_t j = 0; j < yMax; j++) {
+            Cell* cell = new Cell(i, j, grid, (bool)(save.at(index) - '0')); //  - '0' because the char is technically an int, and subtracting '0' will convert it from normal char to actual number
+            col.push_back(*cell);
+            index++;
+        }
+        iCells.push_back(col);
+    }
+
+    grid->cells = iCells;
+    return grid;
 }
 
 

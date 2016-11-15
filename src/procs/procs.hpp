@@ -30,6 +30,7 @@
 #include <string>   // `std::string`, `std::stoi`
 #include <ncurses.h>
 #include <fstream>  // file operations
+#include <sstream>  // `std::stringstream`
 #include "../entities/grid.hpp"
 
 
@@ -48,25 +49,35 @@ namespace proc {
     }
 
 
-    // Gets the result of a yes/no question with handling of unknown values
-    bool getYesNo () {
+    // Returns true if the first and returns false if second
+    bool getBoolChoice (char first = 'y', char second = 'n') {
         char choice;
         getstr(&choice);
-        if (choice == 'y') {
+        if (choice == first) {
             return true;
-        } else if (choice == 'n') {
+        } else if (choice == second) {
             return false;
         } else {
-            printw("Unknown value `%c`, defaulting to false.\n", choice);
+            printw("Unknown value `%c`, defaulting to `%c`.\n", choice, second);
             return false;
         }
     }
 
 
-    // Gets pointers to the variables wanting to be set, and assigns their startup values
-    void getInitialInput (size_t* width, size_t* height, size_t* speed, bool* randomize) {
+    // Initial welcome screen with all the choices to begin the program
+    bool welcomeScreen () {
         printw("Welcome to Game of Life - C++ edition.\n");
         printw("Copyright (C) 2016 Ziyad Edher\n\n");
+
+        printw("[n] Start a new grid        [l] Load an existing grid\n");
+        printw("Enter a choice: ");
+        return getBoolChoice('n', 'l');
+    }
+
+
+    // Gets pointers to the variables wanting to be set, and assigns their startup values
+    void getInitialInput (size_t* width, size_t* height, size_t* speed, bool* randomize) {
+        clear();
 
         printw("Width of the grid:    ");
         char w[4];
@@ -81,7 +92,7 @@ namespace proc {
         getstr(s);
 
         printw("Randomize grid (y/n): ");
-        *randomize = getYesNo();
+        *randomize = getBoolChoice();
 
         printw("\nPress any button to generate...");
         getch();
@@ -103,6 +114,22 @@ namespace proc {
     }
 
 
+    // Asks for a file name and checks whether or not it exists and sets the parameter to the name of that file
+    bool askAndCheckFile (std::string* retName) {
+        clear();
+        move(0, 0);
+
+        printw("Enter the file name: ");
+        char name[64];
+        getstr(name);
+
+        std::ifstream file("saves/full/" + std::string(name));
+
+        *retName = std::string(name);
+        return file.good();
+    }
+
+
     // Saves a given grid to a given file with no questions asked
     void fullSaveToFile (Grid* grid, std::string fileName) {
         std::ofstream file;
@@ -114,18 +141,11 @@ namespace proc {
 
     // Asks the user for input on what and where to save a given grid
     void askFileSave (Grid* grid) {
-        clear();
-        move(0, 0);
+        std::string name;
 
-        printw("Enter the file name: ");
-        char name[64];
-        getstr(name);
-
-        std::ifstream file("saves/full/" + std::string(name));
-
-        if (file.good()) {
+        if (askAndCheckFile(&name)) {
             printw("This file already exists, overwrite (y/n): ");
-            bool choice = getYesNo();
+            bool choice = getBoolChoice();
             if (!choice) {
                 printw("Aborting file save.\nPress any key to continue...");
                 getch();
@@ -133,10 +153,51 @@ namespace proc {
             }
         }
 
-        fullSaveToFile(grid, std::string(name));
-        printw("The file has been saved to `saves/full/%s`.\n", name);
+        fullSaveToFile(grid, name);
+        printw("The file has been saved to `saves/full/%s`.\n", name.c_str());
         printw("Press any key to continue...");
         getch();
+    }
+
+
+    // Loads a given file and converts it into a grid then returns that grid
+    Grid* fullLoadFromFile (std::string fileName) {
+        std::ifstream file;
+        file.open("saves/full/" + fileName);
+        std::stringstream buffer;
+        std::string save;
+
+        buffer << file.rdbuf();
+        save = buffer.str();
+        file.close();
+        return Grid::fromString(save);
+    }
+
+
+    // Asks the user for input on what file to load
+    Grid* loadFile () {
+        std::string name;
+
+        if (!askAndCheckFile(&name)) {
+            printw("This file does not exist.\nAborting file load.\nPress any key to continue...");
+            getch();
+            return NULL;
+        }
+
+        return fullLoadFromFile(name);
+    }
+
+
+    // Settings change menu, the parameters are the settings
+    void changeSettings (size_t* speed) {
+        clear();
+        move(0, 0);
+
+        printw("Execution speed (ms): ");
+        char s[16];
+        getstr(s);
+
+        *speed = (size_t)std::stoi(std::string(s));
     }
 
 
@@ -173,7 +234,7 @@ namespace proc {
         while (true) {
             // First of all displays the grid with supporting information
             displayGrid(grid);
-            printw("[Space] Evolve once        [Enter] Run evolutions\n[a] Toggle cell            [q] Exit              \n[s] Save to file           \n");
+            printw("[Space] Evolve once        [Enter] Run evolutions\n[a] Toggle cell            [c] Change Settings\n[s] Save to file           [q] Exit");
 
             // Move the cursor and display it
             move((int)cursorPosY, (int)cursorPosX);
@@ -189,10 +250,13 @@ namespace proc {
                 return;
             } else if (c == '\n') {
                 loopEvos(grid, speed);
+                nodelay(stdscr, FALSE);
             } else if (c == 'a') {
                 grid->toggleAliveAt(cursorPosX / 2, cursorPosY);
             } else if (c == 's') {
                 askFileSave(grid);
+            } else if (c == 'c') {
+                changeSettings(&speed);
             }
 
             // Checks the arrow keys, and makes sure that moving the cursor won't overflow the `size_t` or go out of bounds of the array

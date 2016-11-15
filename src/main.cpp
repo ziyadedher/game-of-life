@@ -30,13 +30,22 @@
 int main () {
     proc::initCurses();
 
-    size_t width, height, speed;
-    bool randomize;
-
     try {
-        proc::getInitialInput(&width, &height, &speed, &randomize);
-        Grid* grid = new Grid(width, height, randomize);
-        proc::mainLoop(grid, speed);
+        if (proc::welcomeScreen()) {
+            size_t width, height, speed;
+            bool randomize;
+
+            proc::getInitialInput(&width, &height, &speed, &randomize);
+            Grid* grid = new Grid(width, height, randomize);
+            proc::mainLoop(grid, speed);
+        } else {
+            Grid* grid = proc::loadFile();
+            if (grid == NULL) {
+                throw std::exception();
+            }
+            
+            proc::mainLoop(grid, 10);
+        }
     } catch (...) {
         clear();
         printw("One or more inputs were not valid.\nPress any key to terminate...");

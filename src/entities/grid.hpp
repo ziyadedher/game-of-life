@@ -47,6 +47,7 @@ class Grid {
         void evolve ();
         void toggleAliveAt (size_t x_, size_t y_);
         std::string toString ();
+        static Grid* fromString (std::string save);
 
     private:
         void init (bool random);
